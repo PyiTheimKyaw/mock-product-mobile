@@ -9,11 +9,12 @@ class CustomizedTextView extends StatelessWidget {
     required this.textData,
     this.textFontSize = kFont16,
     this.textColor = kWhiteColor,
-    this.textFontWeight = FontWeight.w500,
+    this.textFontWeight = FontWeight.w400,
     this.textAlign = TextAlign.start,
     this.isUnderlined = false,
     this.textHeight,
     this.letterSpacing,
+    this.overflow,
   });
 
   final String textData;
@@ -24,7 +25,7 @@ class CustomizedTextView extends StatelessWidget {
   final bool? isUnderlined;
   final double? textHeight;
   final double? letterSpacing;
-
+  final TextOverflow? overflow;
   @override
   Widget build(BuildContext context) {
     return Text(
@@ -35,6 +36,7 @@ class CustomizedTextView extends StatelessWidget {
           fontWeight: textFontWeight,
           height: textHeight,
           letterSpacing: letterSpacing,
+          overflow: overflow,
           fontFamily: kFontDMS,
           decoration: (isUnderlined ?? false) ? TextDecoration.underline : null,
           decorationColor: textColor,
