@@ -2,6 +2,7 @@
 const double kMargin8 = 8.0;
 const double kMargin12 = 12.0;
 const double kMargin16 = 16.0;
+const double kMargin64 = 64.0;
 
 ///Text font size
 const double kFont12 = 12.0;
