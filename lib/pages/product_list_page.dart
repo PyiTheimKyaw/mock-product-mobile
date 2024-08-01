@@ -1,9 +1,11 @@
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:mock_product_mobile/blocs/product_page_bloc/product_page_bloc.dart';
 import 'package:mock_product_mobile/data/vos/product_vos/product_vo.dart';
 import 'package:mock_product_mobile/utils/colors.dart';
 import 'package:mock_product_mobile/utils/dimensions.dart';
+import 'package:mock_product_mobile/utils/strings.dart';
 import 'package:mock_product_mobile/widgets/app_drawer_view.dart';
 import 'package:mock_product_mobile/widgets/customized_app_bar_view.dart';
 import 'package:mock_product_mobile/widgets/customized_text_view.dart';
@@ -35,16 +37,21 @@ class ProductListPage extends StatelessWidget {
             // To open drawer
             _drawerKey.currentState?.openDrawer();
           },
-          appBarTitle: "Product List",
+          appBarTitle:
+              "${slug?.capitalizeFirst} ${kTextLblProductListTitle.tr}",
         ),
         body: Selector<ProductPageBloc, List<ProductVO>?>(
           selector: (BuildContext context, bloc) => bloc.productList,
           builder: (BuildContext context, productList, Widget? child) =>
               GridView.builder(
             padding: const EdgeInsets.all(kMargin16),
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2, childAspectRatio: 9 / 14),
-            itemCount: productList?.length,
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                childAspectRatio:
+                    (productList != null && (productList.isNotEmpty))
+                        ? 9 / 14
+                        : 1),
+            itemCount: productList?.length ?? 10,
             itemBuilder: (context, index) {
               return (productList != null && (productList.isNotEmpty))
                   ? _ProductItemView(
@@ -68,29 +75,48 @@ class _ShimmerProductItem extends StatelessWidget {
     return Shimmer.fromColors(
       baseColor: Colors.grey.withOpacity(0.3),
       highlightColor: Colors.grey.withOpacity(0.7),
-      child: Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(kRadius15),
-          border: Border.all(color: kPrimaryColor),
-        ),
-        padding: const EdgeInsets.all(kMargin16),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const CircleAvatar(
-              backgroundColor: Colors.white,
-            ),
-            const SizedBox(
-              height: kMargin16,
-            ),
-            Container(
-              width: double.infinity,
-              height: 20.0,
-              color: Colors.white,
-            )
-          ],
+      child: Padding(
+        padding: const EdgeInsets.all(kMargin8),
+        child: Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(kRadius15),
+            border: Border.all(color: kPrimaryColor),
+          ),
+          padding: const EdgeInsets.symmetric(horizontal: kMargin16),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const CircleAvatar(
+                backgroundColor: Colors.white,
+              ),
+              const SizedBox(
+                height: kMargin16,
+              ),
+              Container(
+                width: double.infinity,
+                height: 10.0,
+                color: Colors.white,
+              ),
+              const SizedBox(
+                height: kMargin16,
+              ),
+              Container(
+                width: double.infinity,
+                height: 10.0,
+                color: Colors.white,
+              ),
+              const SizedBox(
+                height: kMargin16,
+              ),
+              Container(
+                width: double.infinity,
+                height: 10.0,
+                color: Colors.white,
+              ),
+            ],
+          ),
         ),
       ),
     );

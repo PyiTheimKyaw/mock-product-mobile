@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
+import 'package:get/get.dart';
 import 'package:mock_product_mobile/blocs/category_page_bloc/category_page_bloc.dart';
 import 'package:mock_product_mobile/data/vos/category_vos/category_vo.dart';
 import 'package:mock_product_mobile/utils/colors.dart';
 import 'package:mock_product_mobile/utils/dimensions.dart';
 import 'package:mock_product_mobile/utils/route_constants.dart';
+import 'package:mock_product_mobile/utils/strings.dart';
 import 'package:mock_product_mobile/widgets/app_drawer_view.dart';
 import 'package:mock_product_mobile/widgets/customized_app_bar_view.dart';
 import 'package:mock_product_mobile/widgets/customized_text_view.dart';
@@ -31,7 +32,7 @@ class CategoriesPage extends StatelessWidget {
             // To open drawer
             _drawerKey.currentState?.openDrawer();
           },
-          appBarTitle: "Categories",
+          appBarTitle: kTextLblHomeTitle.tr,
         ),
         body: const _CategoriesListSectionView(),
       ),
@@ -120,7 +121,8 @@ class _CategoryItemView extends StatelessWidget {
     return GestureDetector(
       onTap: () {
         // To navigate to the product list page
-        context.go("${RouteConstants.kRouteProductList}/${categoryItem.slug}");
+        Get.toNamed(RouteConstants.kRouteProductList,
+            parameters: {"slug": "${categoryItem.slug}"});
       },
       child: Container(
         decoration: BoxDecoration(
