@@ -6,8 +6,8 @@ import 'package:mock_product_mobile/utils/route_constants.dart';
 
 // Route configuration for the whole app
 class AppRouter {
-  GoRouter router = GoRouter(
-    routes: [
+  final GoRouter router = GoRouter(
+    routes: <RouteBase>[
       GoRoute(
         name: RouteConstants.kRouteHome,
         path: '/',
@@ -18,17 +18,21 @@ class AppRouter {
             child: const CategoriesPage(),
           );
         },
-      ),
-      GoRoute(
-        name: RouteConstants.kRouteProductList,
-        path: '/product-list',
-        pageBuilder: (context, state) {
-          return buildPageWithDefaultTransition<void>(
-            context: context,
-            state: state,
-            child: const ProductListPage(),
-          );
-        },
+        routes: <RouteBase>[
+          GoRoute(
+            name: RouteConstants.kRouteProductList,
+            path: 'product-list/:slug',
+            pageBuilder: (context, state) {
+              return buildPageWithDefaultTransition<void>(
+                context: context,
+                state: state,
+                child: ProductListPage(
+                  slug: state.pathParameters['slug'],
+                ),
+              );
+            },
+          ),
+        ],
       ),
     ],
   );

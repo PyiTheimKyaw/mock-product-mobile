@@ -11,13 +11,19 @@ final GlobalKey<ScaffoldState> _drawerKey = GlobalKey();
 
 // Product list page from categories page when user chose a category
 class ProductListPage extends StatelessWidget {
-  const ProductListPage({super.key});
+  const ProductListPage({
+    super.key,
+    required this.slug,
+  });
+
+  final String? slug;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       key: _drawerKey,
       drawer: const AppDrawerView(),
+      drawerEnableOpenDragGesture: false,
       backgroundColor: kWhiteColor,
       appBar: CustomizedAppBarView(
         onTapMenu: () {
@@ -43,7 +49,7 @@ class ProductListPage extends StatelessWidget {
 }
 
 class _ProductItemView extends StatelessWidget {
-  const _ProductItemView({super.key, required this.index});
+  const _ProductItemView({required this.index});
 
   final int index;
 
@@ -95,9 +101,7 @@ class _ProductItemView extends StatelessWidget {
 
 // Collection of products info
 class _ProductInfoView extends StatelessWidget {
-  const _ProductInfoView({
-    super.key,
-  });
+  const _ProductInfoView();
 
   @override
   Widget build(BuildContext context) {
