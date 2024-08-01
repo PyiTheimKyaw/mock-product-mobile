@@ -10,3 +10,5 @@ const Color kYellowColor = Colors.yellow;
 const Color kHoveredColor = Color.fromRGBO(3, 255, 169, 0.8);
 const Color kDiscountPercentColor = kWhiteColor;
 const Color kProductPriceColor = Colors.deepOrange;
+const Color kProductTagsColor = Colors.deepOrange;
+

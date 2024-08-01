@@ -1,11 +1,14 @@
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:mock_product_mobile/blocs/product_page_bloc/product_page_bloc.dart';
+import 'package:mock_product_mobile/data/vos/product_vos/product_vo.dart';
 import 'package:mock_product_mobile/utils/colors.dart';
 import 'package:mock_product_mobile/utils/dimensions.dart';
 import 'package:mock_product_mobile/widgets/app_drawer_view.dart';
 import 'package:mock_product_mobile/widgets/customized_app_bar_view.dart';
 import 'package:mock_product_mobile/widgets/customized_text_view.dart';
+import 'package:provider/provider.dart';
+import 'package:shimmer/shimmer.dart';
 
 final GlobalKey<ScaffoldState> _drawerKey = GlobalKey();
 
@@ -20,38 +23,88 @@ class ProductListPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      key: _drawerKey,
-      drawer: const AppDrawerView(),
-      drawerEnableOpenDragGesture: false,
-      backgroundColor: kWhiteColor,
-      appBar: CustomizedAppBarView(
-        onTapMenu: () {
-          // To open drawer
-          _drawerKey.currentState?.openDrawer();
-        },
-        appBarTitle: "Product List",
-      ),
-      body: MasonryGridView.builder(
-        padding: const EdgeInsets.all(kMargin16),
-        gridDelegate: const SliverSimpleGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2,
+    return ChangeNotifierProvider(
+      create: (BuildContext context) => ProductPageBloc(catSlug: slug),
+      child: Scaffold(
+        key: _drawerKey,
+        drawer: const AppDrawerView(),
+        drawerEnableOpenDragGesture: false,
+        backgroundColor: kWhiteColor,
+        appBar: CustomizedAppBarView(
+          onTapMenu: () {
+            // To open drawer
+            _drawerKey.currentState?.openDrawer();
+          },
+          appBarTitle: "Product List",
         ),
-        itemCount: 5,
-        itemBuilder: (context, index) {
-          return _ProductItemView(
-            index: index,
-          );
-        },
+        body: Selector<ProductPageBloc, List<ProductVO>?>(
+          selector: (BuildContext context, bloc) => bloc.productList,
+          builder: (BuildContext context, productList, Widget? child) =>
+              GridView.builder(
+            padding: const EdgeInsets.all(kMargin16),
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2, childAspectRatio: 9 / 14),
+            itemCount: productList?.length,
+            itemBuilder: (context, index) {
+              return (productList != null && (productList.isNotEmpty))
+                  ? _ProductItemView(
+                      index: index,
+                      productItem: productList[index],
+                    )
+                  : const _ShimmerProductItem();
+            },
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _ShimmerProductItem extends StatelessWidget {
+  const _ShimmerProductItem();
+
+  @override
+  Widget build(BuildContext context) {
+    return Shimmer.fromColors(
+      baseColor: Colors.grey.withOpacity(0.3),
+      highlightColor: Colors.grey.withOpacity(0.7),
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(kRadius15),
+          border: Border.all(color: kPrimaryColor),
+        ),
+        padding: const EdgeInsets.all(kMargin16),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const CircleAvatar(
+              backgroundColor: Colors.white,
+            ),
+            const SizedBox(
+              height: kMargin16,
+            ),
+            Container(
+              width: double.infinity,
+              height: 20.0,
+              color: Colors.white,
+            )
+          ],
+        ),
       ),
     );
   }
 }
 
 class _ProductItemView extends StatelessWidget {
-  const _ProductItemView({required this.index});
+  const _ProductItemView({
+    required this.index,
+    required this.productItem,
+  });
 
   final int index;
+  final ProductVO? productItem;
 
   @override
   Widget build(BuildContext context) {
@@ -77,21 +130,33 @@ class _ProductItemView extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Product thumbnail image
-            ClipRRect(
-              borderRadius: const BorderRadius.only(
-                topLeft: Radius.circular(kRadius15),
-                topRight: Radius.circular(kRadius15),
-              ),
-              child: Image.asset(
-                "assets/images/free-images$index.jpg",
-                fit: BoxFit.contain,
+            Expanded(
+              child: ClipRRect(
+                borderRadius: const BorderRadius.only(
+                  topLeft: Radius.circular(kRadius15),
+                  topRight: Radius.circular(kRadius15),
+                ),
+                child: Image.network(
+                  productItem?.thumbnail ?? "",
+                  width: MediaQuery.of(context).size.width,
+                  fit: BoxFit.cover,
+                  loadingBuilder: (BuildContext context, Widget child,
+                      ImageChunkEvent? loadingProgress) {
+                    if (loadingProgress == null) return child;
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  },
+                ),
               ),
             ),
             const SizedBox(
               height: kMargin16,
             ),
             // Product detail info
-            const _ProductInfoView()
+            _ProductInfoView(
+              productItem: productItem,
+            )
           ],
         ),
       ),
@@ -101,7 +166,11 @@ class _ProductItemView extends StatelessWidget {
 
 // Collection of products info
 class _ProductInfoView extends StatelessWidget {
-  const _ProductInfoView();
+  const _ProductInfoView({
+    required this.productItem,
+  });
+
+  final ProductVO? productItem;
 
   @override
   Widget build(BuildContext context) {
@@ -112,80 +181,106 @@ class _ProductInfoView extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Product name
-          const CustomizedTextView(
-            textData: "Badmintion Shoe shoes",
+          CustomizedTextView(
+            textData: productItem?.title ?? "",
             textColor: kPrimaryColor,
             textFontSize: kFont16,
             textFontWeight: FontWeight.w500,
             overflow: TextOverflow.ellipsis,
           ),
+          const SizedBox(
+            height: kMargin4,
+          ),
           // Product price and discount
           Row(
             children: [
               // Price
-              const CustomizedTextView(
-                textData: "\u0e3f 9.12",
+              CustomizedTextView(
+                textData: "\u0e3f ${productItem?.price}",
                 textColor: kProductPriceColor,
                 textFontSize: kFont14,
               ),
-              const SizedBox(
-                width: kMargin12,
-              ),
+              const Spacer(),
               // Discount
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: kMargin8),
                 decoration: BoxDecoration(
                     color: kPrimaryColor,
                     borderRadius: BorderRadius.circular(kRadius20)),
-                child: const CustomizedTextView(
-                  textData: "9%",
+                child: CustomizedTextView(
+                  textData: "${productItem?.discountPercentage}%",
                   textColor: kDiscountPercentColor,
                   textFontSize: kFont12,
                 ),
               ),
             ],
           ),
+          const SizedBox(
+            height: kMargin4,
+          ),
           // Rating
-          const Row(
+          Row(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              Icon(
+              const Icon(
                 Icons.star,
                 color: kYellowColor,
               ),
               // Rating
               CustomizedTextView(
-                textData: "4.5",
+                textData: "${productItem?.rating}",
                 textColor: kBlackColor,
                 textFontWeight: FontWeight.w400,
                 textFontSize: kFont12,
               ),
-              Spacer(),
+              const Spacer(),
               //Stock
               CustomizedTextView(
-                textData: "Stock :59",
+                textData: "Stock :${productItem?.stock}",
                 textColor: kBlackColor,
                 textFontWeight: FontWeight.w400,
                 textFontSize: kFont12,
               ),
             ],
           ),
+          const SizedBox(
+            height: kMargin4,
+          ),
+
           // Product's tags
           Row(
             mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
+              //set empty string becuz before animated text appears the space is free and make the item something happened in user interface
               const CustomizedTextView(textData: ""),
-              AnimatedTextKit(
-                repeatForever: true,
-                animatedTexts: [
-                  FlickerAnimatedText('Flicker Frenzy'),
-                  FlickerAnimatedText('Night Vibes On'),
-                  FlickerAnimatedText("C'est La Vie !"),
-                ],
+              Expanded(
+                child: AnimatedTextKit(
+                  repeatForever: true,
+                  animatedTexts: [
+                    FadeAnimatedText(
+                      productItem?.warrantyInformation ?? "",
+                      textStyle: const TextStyle(
+                          overflow: TextOverflow.ellipsis,
+                          color: kProductTagsColor),
+                    ),
+                    FadeAnimatedText(
+                      productItem?.shippingInformation ?? "",
+                      textStyle: const TextStyle(
+                          overflow: TextOverflow.ellipsis,
+                          color: kProductTagsColor),
+                    ),
+                    FadeAnimatedText(
+                      productItem?.returnPolicy ?? "",
+                      textStyle: const TextStyle(
+                          overflow: TextOverflow.ellipsis,
+                          color: kProductTagsColor),
+                    ),
+                  ],
+                ),
               ),
             ],
           )

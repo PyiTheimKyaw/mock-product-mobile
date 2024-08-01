@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:mock_product_mobile/data/vos/category_vos/category_vo.dart';
 import 'package:mock_product_mobile/network/api/api_constants.dart';
+import 'package:mock_product_mobile/network/responses/product_response.dart';
 import 'package:retrofit/http.dart';
 
 part 'product_api.g.dart';
@@ -12,4 +13,8 @@ abstract class ProductApi {
 
   @GET(ApiConstants.kEndPointGetCategories)
   Future<List<CategoryVO>?> getAllCategories();
+
+  @GET(ApiConstants.kEndPointGetProductList)
+  Future<ProductResponse> getProductListByCategory(
+      @Path(ApiConstants.kParamCategory) String slug);
 }

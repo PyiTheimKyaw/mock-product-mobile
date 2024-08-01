@@ -1,4 +1,5 @@
 ///Paddings
+const double kMargin4 = 4.0;
 const double kMargin8 = 8.0;
 const double kMargin12 = 12.0;
 const double kMargin16 = 16.0;
