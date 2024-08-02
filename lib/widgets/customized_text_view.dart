@@ -11,7 +11,7 @@ class CustomizedTextView extends StatelessWidget {
     this.textColor = kWhiteColor,
     this.textFontWeight = FontWeight.w400,
     this.textAlign = TextAlign.start,
-    this.isUnderlined = false,
+    this.isLinedThrough = false,
     this.textHeight,
     this.letterSpacing,
     this.overflow,
@@ -22,7 +22,7 @@ class CustomizedTextView extends StatelessWidget {
   final Color? textColor;
   final FontWeight? textFontWeight;
   final TextAlign? textAlign;
-  final bool? isUnderlined;
+  final bool? isLinedThrough;
   final double? textHeight;
   final double? letterSpacing;
   final TextOverflow? overflow;
@@ -38,7 +38,7 @@ class CustomizedTextView extends StatelessWidget {
           letterSpacing: letterSpacing,
           overflow: overflow,
           fontFamily: kFontDMS,
-          decoration: (isUnderlined ?? false) ? TextDecoration.underline : null,
+          decoration: (isLinedThrough ?? false) ? TextDecoration.lineThrough : null,
           decorationColor: textColor,
           decorationStyle: TextDecorationStyle.solid),
       textAlign: textAlign,
