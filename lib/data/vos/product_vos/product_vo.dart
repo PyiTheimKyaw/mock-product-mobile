@@ -1,4 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
+import 'package:mock_product_mobile/data/vos/review_vo/review_vo.dart';
 
 part 'product_vo.g.dart';
 
@@ -36,8 +37,8 @@ class ProductVO {
   final String? shippingInformation;
   @JsonKey(name: 'availabilityStatus')
   final String? availabilityStatus;
-
-  // reviews
+  @JsonKey(name: 'reviews')
+  final List<ReviewVO>? reviews;
   @JsonKey(name: 'returnPolicy')
   final String? returnPolicy;
   @JsonKey(name: 'minimumOrderQuantity')
@@ -65,6 +66,7 @@ class ProductVO {
       this.warrantyInformation,
       this.shippingInformation,
       this.availabilityStatus,
+      this.reviews,
       this.returnPolicy,
       this.minimumOrderQuantity,
       this.images,
@@ -88,4 +90,12 @@ class ProductVO {
   @override
   int get hashCode =>
       id.hashCode ^ title.hashCode ^ category.hashCode ^ brand.hashCode;
+
+  double? getOriginalPrice() {
+    if (discountPercentage != null && price != null) {
+      return (price! / (1 - (discountPercentage! / 100))).ceilToDouble();
+    } else {
+      return price;
+    }
+  }
 }
