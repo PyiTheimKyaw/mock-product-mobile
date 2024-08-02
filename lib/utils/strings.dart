@@ -11,3 +11,4 @@ const String kTextLblProductListTitle = "lblProductListTile";
 const String kTextLanguagesTitle = "lblLanguageTitle";
 const String kTextEngLang = "lblEngLang";
 const String kTextThaiLang = "lblThaiLang";
+const String kTextReviewTitle = "lblReviewTitle";

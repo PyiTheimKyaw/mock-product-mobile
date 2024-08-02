@@ -5,6 +5,7 @@ import 'package:mock_product_mobile/blocs/product_page_bloc/product_page_bloc.da
 import 'package:mock_product_mobile/data/vos/product_vos/product_vo.dart';
 import 'package:mock_product_mobile/utils/colors.dart';
 import 'package:mock_product_mobile/utils/dimensions.dart';
+import 'package:mock_product_mobile/utils/route_constants.dart';
 import 'package:mock_product_mobile/utils/strings.dart';
 import 'package:mock_product_mobile/widgets/app_drawer_view.dart';
 import 'package:mock_product_mobile/widgets/customized_app_bar_view.dart';
@@ -134,56 +135,61 @@ class _ProductItemView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(kMargin8),
-      child: Container(
-        padding: const EdgeInsets.only(bottom: kMargin16),
-        decoration: BoxDecoration(
-          color: kWhiteColor,
-          borderRadius: BorderRadius.circular(kRadius15),
-          border: Border.all(color: kPrimaryColor),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.grey.withOpacity(0.5),
-              spreadRadius: 2,
-              blurRadius: 6,
-              offset: const Offset(0, 3), // changes position of shadow
-            ),
-          ],
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Product thumbnail image
-            Expanded(
-              child: ClipRRect(
-                borderRadius: const BorderRadius.only(
-                  topLeft: Radius.circular(kRadius15),
-                  topRight: Radius.circular(kRadius15),
-                ),
-                child: Image.network(
-                  productItem?.thumbnail ?? "",
-                  width: MediaQuery.of(context).size.width,
-                  fit: BoxFit.cover,
-                  loadingBuilder: (BuildContext context, Widget child,
-                      ImageChunkEvent? loadingProgress) {
-                    if (loadingProgress == null) return child;
-                    return const Center(
-                      child: CircularProgressIndicator(),
-                    );
-                  },
+    return GestureDetector(
+      onTap: () {
+        Get.toNamed(RouteConstants.kRouteProductDetail, arguments: productItem);
+      },
+      child: Padding(
+        padding: const EdgeInsets.all(kMargin8),
+        child: Container(
+          padding: const EdgeInsets.only(bottom: kMargin16),
+          decoration: BoxDecoration(
+            color: kWhiteColor,
+            borderRadius: BorderRadius.circular(kRadius15),
+            border: Border.all(color: kPrimaryColor),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.withOpacity(0.5),
+                spreadRadius: 2,
+                blurRadius: 6,
+                offset: const Offset(0, 3), // changes position of shadow
+              ),
+            ],
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Product thumbnail image
+              Expanded(
+                child: ClipRRect(
+                  borderRadius: const BorderRadius.only(
+                    topLeft: Radius.circular(kRadius15),
+                    topRight: Radius.circular(kRadius15),
+                  ),
+                  child: Image.network(
+                    productItem?.thumbnail ?? "",
+                    width: MediaQuery.of(context).size.width,
+                    fit: BoxFit.cover,
+                    loadingBuilder: (BuildContext context, Widget child,
+                        ImageChunkEvent? loadingProgress) {
+                      if (loadingProgress == null) return child;
+                      return const Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    },
+                  ),
                 ),
               ),
-            ),
-            const SizedBox(
-              height: kMargin16,
-            ),
-            // Product detail info
-            _ProductInfoView(
-              productItem: productItem,
-            )
-          ],
+              const SizedBox(
+                height: kMargin16,
+              ),
+              // Product detail info
+              _ProductInfoView(
+                productItem: productItem,
+              )
+            ],
+          ),
         ),
       ),
     );

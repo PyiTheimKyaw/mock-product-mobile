@@ -144,18 +144,14 @@ class _CategoryItemView extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            //First category item thumbnail image
-            // Expanded(
-            //   child: Image.network(
-            //       "https://cdn.dummyjson.com/products/images/beauty/Essence%20Mascara%20Lash%20Princess/thumbnail.png"),
-            // ),
             const Expanded(
-                flex: 2,
-                child: Icon(
-                  Icons.category_outlined,
-                  color: kPrimaryColor,
-                  size: 50,
-                )),
+              flex: 2,
+              child: Icon(
+                Icons.category_outlined,
+                color: kPrimaryColor,
+                size: 50,
+              ),
+            ),
             // Category name
             CustomizedTextView(
               textData: categoryItem.name ?? "",

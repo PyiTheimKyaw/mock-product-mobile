@@ -5,6 +5,7 @@ import 'package:mock_product_mobile/blocs/app_drawer_bloc/app_drawer_bloc.dart';
 import 'package:mock_product_mobile/blocs/application_provider.dart';
 import 'package:mock_product_mobile/localization/languages.dart';
 import 'package:mock_product_mobile/pages/categories_page.dart';
+import 'package:mock_product_mobile/pages/product_detail_page.dart';
 import 'package:mock_product_mobile/pages/product_list_page.dart';
 import 'package:mock_product_mobile/utils/route_constants.dart';
 import 'package:mock_product_mobile/utils/strings.dart';
@@ -47,6 +48,12 @@ class MyApp extends StatelessWidget {
         GetPage(
           name: RouteConstants.kRouteProductList,
           page: () => ProductListPage(slug: Get.parameters['slug']),
+        ),
+        GetPage(
+          name: RouteConstants.kRouteProductDetail,
+          page: () => ProductDetailPage(
+            product: Get.arguments,
+          ),
         ),
       ],
     );
