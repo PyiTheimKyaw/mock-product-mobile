@@ -1,4 +1,5 @@
 ///Paddings
+const double kMargin4 = 4.0;
 const double kMargin8 = 8.0;
 const double kMargin12 = 12.0;
 const double kMargin16 = 16.0;
@@ -17,3 +18,6 @@ const double kFont32 = 32.0;
 const double kRadius10 = 10.0;
 const double kRadius15 = 15.0;
 const double kRadius20 = 20.0;
+
+///App specific
+const double kFlagSize = 50.0;
